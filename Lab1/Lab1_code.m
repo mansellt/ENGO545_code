@@ -1,0 +1,59 @@
+%ENGO545 Lab1
+clear all;
+clc;
+
+T = readtable('data/tidal_constituents_2025.txt', 'Delimiter','\t');
+
+n = size(T, 1);
+m = size(T, 2);
+
+Ho = 0; %change this later
+
+t_nov_first72hrs = ((365 + 304)*24:(365 + 304)*24+72)';
+t_last61days = [(2*365*24-61*24):(2*365*24)]';
+t_2026 = [(365*24):(365*24*2)]';
+
+
+fi = T.f_2025;
+equi = T.V0u_2025_deg;
+Hi = T.NOAA_Amplitude_ft;
+ki = T.NOAA_Phase_deg;
+ai = T.Speed_deg_per_hr;
+
+ht_last61 = calc_h(0, fi, Hi, ai, t_last61days, equi, ki); 
+ht_nov_first72hrs = calc_h(0, fi, Hi, ai, t_nov_first72hrs, equi, ki); 
+ht_2026 = calc_h(0, fi, Hi, ai, t_2026, equi, ki); 
+
+%% plot
+figure;
+hold on;
+plot(t_nov_first72hrs, ht_nov_first72hrs)
+xlabel('Time (hrs)')
+ylabel('feet')
+title('first 72 hours in November 2026')
+
+figure;
+hold on;
+plot(t_last61days, ht_last61)
+xlabel('Time (hrs)')
+ylabel('feet')
+title('last 61 days of 2026')
+figure;
+hold on;
+plot(t_2026, ht_2026)
+xlabel('Time (hrs)')
+ylabel('feet')
+title('2026')
+
+%% compute range
+
+%% Functions
+
+function ht = calc_h(Ho, fi, Hi, ai, t, equi, ki)
+%function that calculates the sum of waves for a given time period
+ht = zeros(length(t),1);
+    for i=1:length(t)
+        hti = Ho + fi.*Hi.*cosd(ai.*t(i)+equi-ki);
+        ht(i) = sum(hti);
+    end 
+end
