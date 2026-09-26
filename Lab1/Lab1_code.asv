@@ -47,11 +47,8 @@ ylabel('feet')
 title('2026')
 
 %% compute range for each period
-r_last61 = max(ht_last61) - min(ht_last61)
-r_nov_first72hrs = max(ht_nov_first72hrs) - min(ht_nov_first72hrs)
-r_2026 = max(ht_2026) - min(ht_2026)
+r
 
-%last 61 days is decent approximation of the range for the entire year.
 
 %% Functions
 
@@ -59,7 +56,7 @@ function ht = calc_h(Ho, fi, Hi, ai, t, equi, ki)
 %function that calculates the sum of waves for a given time period
 ht = zeros(length(t),1);
     for i=1:length(t)
-        hti = fi.*Hi.*cosd(ai.*t(i)+equi-ki);
-        ht(i) = Ho + sum(hti);
+        hti = Ho + fi.*Hi.*cosd(ai.*t(i)+equi-ki);
+        ht(i) = sum(hti);
     end 
 end
