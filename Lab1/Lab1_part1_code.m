@@ -7,7 +7,7 @@ T = readtable('data/tidal_constituents_2025.txt', 'Delimiter','\t');
 n = size(T, 1);
 m = size(T, 2);
 
-Ho = 6.64; %MSL relative to MLLW which is the datum for Seattle
+Ho = 6.64; %MSL relative to MLLW, which is tidal the datum for Seattle
 
 t_nov_first72hrs = ((365 + 304)*24:(365 + 304)*24+72)';
 t_last61days = [(2*365*24-61*24):(2*365*24)]';
