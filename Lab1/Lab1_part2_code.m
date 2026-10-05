@@ -31,11 +31,11 @@ T_plot = T(idx,:);
 figure
 hold on
 %Bounds
-%h < 1.5     65.9 - 3 -61.5 + 0.1
-%h > -0.1    -15 + 5 + 9.8 + 0.1
+%h < 1.5     66 - 3 -61.5
+%h > -0.2    -15 + 5 + 9.8
 
 upperBound = 1.5;
-lowerBound = -0.1;
+lowerBound = -0.2;
 
 plot(T_plot.Date,T_plot.TideHeight, ...
     'LineWidth',1.2, 'DisplayName','Predicted Tide')
@@ -61,14 +61,10 @@ T_between = T_plot(idx_threshold,:);
 startIdx = find(diff([false; idx_threshold]) == 1);
 endIdx   = find(diff([idx_threshold; false]) == -1);
 
-% Extract start and end times
-startTimes = T_plot.Date(startIdx);
+startTimes = T_plot.Date(startIdx); % Extract start and end times
 endTimes   = T_plot.Date(endIdx);
 
-% Calculate duration of each interval
 durationHours = hours(endTimes - startTimes);
-
-% Put results in a table
 windows = table(startTimes, endTimes, durationHours);
 
 disp(windows)
