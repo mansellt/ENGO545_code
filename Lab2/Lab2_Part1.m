@@ -92,29 +92,21 @@ ci = c(1:end-1); % Assume constant sound speed using the top of each layer
 ti = di ./ ci; % Calculate travel time through each layer
 t_total = cumsum(ti); % Accumulate travel time
 
-% Calculate seabed depths
-seabedDepth = zeros(length(t_obs),1);
+% Calculate estimated depths
+D = zeros(length(t_obs),1);
 
 for j = 1:length(t_obs)
 
-    % Find the layer containing the seabed
-    i = find(t_total >= t_obs(j), 1);
-
-    % Accumulated time and depth before the final layer
+    i = find(t_total >= t_obs(j), 1);  % Find layer where travel time is reached
+    % Time before entering final layer
     if i == 1
         t_previous = 0;
-        d_previous = transducerDepth;
     else
         t_previous = t_total(i-1);
-        d_previous = depth(i);
     end
 
-    t_remaining = t_obs(j) - t_previous; % Remaining travel time
-    d_remaining = ci(i) * t_remaining; % Remaining distance in the final layer
-    seabedDepth(j) = d_previous + d_remaining; % Total depth below water surface
+    D(j) = depth(i) + ci(i)*(t_obs(j) - t_previous); % Calculate total depth
 
 end
 
-% Display results
-results_depth = table(TWTT, t_obs, seabedDepth);
-disp(results_depth);
+disp(table(TWTT,D))
