@@ -1,0 +1,79 @@
+%Lab2 Part 1
+
+% ENGO 545 - Lab 2 Part 1
+clear;
+clc;
+close all;
+
+T = readtable('Data/ENGO545_Lab2_data.csv');
+
+depth = T.Depth;
+temp = T.Temperature;
+salinity = T.Salinity;
+
+%% 1
+%Plot Temperature and Salinity vs Depth
+%Temp Profile
+figure;
+plot(temp, depth, '-o', 'LineWidth', 1.2);
+set(gca, 'YDir', 'reverse');
+xlabel('Temperature (°C)');
+ylabel('Depth (m)');
+title('Temperature Profile');
+grid on;
+
+%Salinity Profile
+figure;
+plot(salinity, depth, '-o', 'LineWidth', 1.2);
+set(gca, 'YDir', 'reverse');
+xlabel('Salinity (ppt)');
+ylabel('Depth (m)');
+title('Salinity Profile');
+grid on;
+
+%% 2
+% Calculate Speed of Sound
+% Mackenzie Equation (1981)
+
+c = 1448.96 ...
+    + 4.591*temp ...
+    - 5.304e-2*temp.^2 ...
+    + 2.374e-4*temp.^3 ...
+    + 1.340*(salinity - 35) ...
+    + 1.630e-2*depth ...
+    + 1.675e-7*depth.^2 ...
+    - 1.025e-2*temp.*(salinity - 35) ...
+    - 7.139e-13*temp.*depth.^3;
+
+%Or maybe use this equation
+%{
+c = 1449.2 ...
+    + 4.6*temp ...
+    - 5.5e-2*temp.^2 ...
+    + 2.9e-4*temp.^3 ...
+    + (1.34 - 1.0e-2*temp).*(salinity - 35) ...
+    + 1.6e-2*depth;
+%}
+
+% Display results
+results = table(depth, temp, salinity, c, ...
+    'VariableNames', {'Depth_m', 'Temperature_C', ...
+                      'Salinity_ppt', 'SoundSpeed_mps'});
+
+disp(results);
+
+%% 3
+% Plot Sound Velocity Profile
+
+figure;
+plot(c, depth, '-o', 'LineWidth', 1.2);
+set(gca, 'YDir', 'reverse');
+xlabel('Sound Speed (m/s)');
+ylabel('Depth (m)');
+title('Sound Velocity Profile (SVP)');
+grid on;
+
+%% 4
+%estimate the survey depth
+
+%assume constant sound
